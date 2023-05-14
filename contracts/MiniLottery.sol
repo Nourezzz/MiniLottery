@@ -18,9 +18,8 @@ contract MiniLottery{
         require(owner == msg.sender);
         _;
     }
-    function setMinimEnter(uint minimo)public view returns(bool){
+    function setMinimEnter(uint minimo)public view {
         minimo = minimEnter;
-        return true;
     }
 
     function randomNumber() public view returns(uint) {
@@ -48,9 +47,10 @@ contract MiniLottery{
         address payable winner = giocatoriz[index];
         uint tempWbal = winningBalance;
         winningBalance = 0; 
-        winner.transfer(tempWbal); 
+        (bool success,) = winner.call{value:tempWbal}(""); 
+        require(success);
         lotteriaz++;
-        giocatoriz = new address payable[](0);
+        delete giocatoriz;
     
     }
 
@@ -60,4 +60,3 @@ contract MiniLottery{
     } 
 
 }
-
